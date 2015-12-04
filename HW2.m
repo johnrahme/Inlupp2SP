@@ -1,4 +1,3 @@
-
 clear all
 
 T = 0.1;
@@ -9,15 +8,15 @@ sigma1 = 0.2;
 sigma2 = 0.3;
 C1 = [1 0];
 C2 = [1 0];
-Cm1 = [C1; C2];
-Cm2 = C1+C2;
+Cm1 = [C1; C2];  % C matrix for method 1.
+Cm2 = C1+C2;  % C matrix for method 2.
 
 Q = [T^3/3 T^2/2; T^2/2 T]*q;
 A = [1 T; 0 1];
 B = [0 0]';
 R1 = Q;
-R2_1 = [sigma1 0; 0 sigma2];
-R2_2 = sigma1 + sigma2;
+R2_1 = [sigma1 0; 0 sigma2]; %R2 for method 1
+R2_2 = sigma1 + sigma2;  %R2 for method 2
 %--------------------------------------------------------------------------
 %Q1
 
@@ -31,7 +30,7 @@ for i = 1:amount
   
 end;
 
-
+%Initiation for Kalman filter. 
 mean_x = [0;0];
 xk_km1=zeros([2, amount]);
 xk_k=zeros([2 amount+1]);
@@ -48,8 +47,8 @@ Pkkm1(:,:,i)=Pkk(:,:,i)-Pkk(:,:,i)*Cm1'*inv(Cm1*Pkk(:,:,i)*Cm1'+R2_1)*Cm1*Pkk(:,
 xk_km1(:,i)=xk_k(:,i)+K*(y(i)-Cm1*xk_k(:,i)); %aposteriori estimate
 xk_k(:,i+1)=A*xk_km1(:,i); %apriori estimate
 Pkk(:,:,i+1)=A*Pkkm1(:,:,i)*A'+R1; %covariance of apriori estimate
-tracerk(i) = trace(Pkkm1(:,:,i));
-tracerk_1(i) = trace(Pkk(:,:,i));
+tracerk(i) = trace(Pkkm1(:,:,i));  %Trace of P_k|k-1
+tracerk_1(i) = trace(Pkk(:,:,i));  %Trace of P_k|k
 end
 
 
@@ -90,7 +89,7 @@ for i = 1:amount
    y_2(i)= Cm2*x(:,i)+sqrt(R2_2)*randn;  
 end;
 
-
+%Initiation for Kalman filter
 xk_km1_2=zeros([2, amount]);
 xk_k_2=zeros([2 amount+1]);
 xk_k_2(:,1) = (mvnrnd(mean_x, Q))'; 
@@ -105,8 +104,8 @@ Pkkm1_2(:,:,i)=Pkk_2(:,:,i)-Pkk_2(:,:,i)*Cm2'*inv(Cm2*Pkk_2(:,:,i)*Cm2'+R2_2)*Cm
 xk_km1_2(:,i)=xk_k_2(:,i)+K_2*(y_2(i)-Cm2*xk_k_2(:,i)); %aposteriori estimate
 xk_k_2(:,i+1)=A*xk_km1_2(:,i); %apriori estimate
 Pkk_2(:,:,i+1)=A*Pkkm1_2(:,:,i)*A'+R1; %covariance of apriori estimate
-tracerk_2(i) = trace(Pkkm1_2(:,:,i));
-tracerk_1_2(i) = trace(Pkk_2(:,:,i));
+tracerk_2(i) = trace(Pkkm1_2(:,:,i)); %Trace of P_k|k-1
+tracerk_1_2(i) = trace(Pkk_2(:,:,i)); %Trace of P_k|k
 end
 
 t = T*[1:amount];
@@ -175,8 +174,8 @@ Pkkm1_3(:,:,i)=Pkk_3(:,:,i)-Pkk_3(:,:,i)*Cm1'*inv(Cm1*Pkk_3(:,:,i)*Cm1'+R2_1)*Cm
 xk_km1_3(:,i)=xk_k_3(:,i)+K_3*(y_3(i)-Cm1*xk_k_3(:,i)); %aposteriori estimate
 xk_k_3(:,i+1)=A*xk_km1_3(:,i); %apriori estimate
 Pkk_3(:,:,i+1)=A*Pkkm1_3(:,:,i)*A'+R1; %covariance of apriori estimate
-tracerk_3(i) = trace(Pkkm1_3(:,:,i));
-tracerk_1_3(i) = trace(Pkk_3(:,:,i));
+tracerk_3(i) = trace(Pkkm1_3(:,:,i));  %Trace of P_k|k-1
+tracerk_1_3(i) = trace(Pkk_3(:,:,i));  %Trace of P_k|k
 end
 
 
@@ -221,8 +220,8 @@ Pkkm1_4(:,:,i)=Pkk_4(:,:,i)-Pkk_4(:,:,i)*Cm2'*inv(Cm2*Pkk_4(:,:,i)*Cm2'+R2_2)*Cm
 xk_km1_4(:,i)=xk_k_4(:,i)+K_4*(y_4(i)-Cm2*xk_k_4(:,i)); %aposteriori estimate
 xk_k_4(:,i+1)=A*xk_km1_4(:,i); %apriori estimate
 Pkk_4(:,:,i+1)=A*Pkkm1_4(:,:,i)*A'+R1; %covariance of apriori estimate
-tracerk_4(i) = trace(Pkkm1_4(:,:,i));
-tracerk_1_4(i) = trace(Pkk_4(:,:,i));
+tracerk_4(i) = trace(Pkkm1_4(:,:,i));  %Trace of P_k|k-1
+tracerk_1_4(i) = trace(Pkk_4(:,:,i));  %Trace of P_k|k
 end
 
 figure(8);
